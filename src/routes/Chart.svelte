@@ -1,5 +1,5 @@
 <script lang="ts">
-	import data from '../data/temp_country_weekly_mean_week_aggregation_start_monday.json';
+	import data from '../data/temp_country_weekly_max.json';
 
 	import { scaleLinear } from 'd3-scale';
 	import { interpolateSpectral } from 'd3-scale-chromatic';
