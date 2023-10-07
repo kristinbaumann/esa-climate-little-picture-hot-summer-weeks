@@ -1,26 +1,28 @@
 <script lang="ts">
-	import data from '../data/temp_country_weekly_max_daily_in_week_all_countries.json';
+	import data from '../data/temp_country_weekly_max_daily_in_week_all_countries_new.json';
+	import { scaleSequential } from 'd3-scale';
+	import { interpolateReds } from 'd3-scale-chromatic';
 
-	const countryNames = [
+	let countryNames = [
 		'AL',
-		'AT',
+		// 'AT',
 		'BA',
 		'BE',
 		'BG',
-		'CH',
+		// 'CH',
 		'CY',
-		'CZ',
+		// 'CZ',
 		'DE',
-		'DK',
-		'EE',
-		'EL',
+		// 'DK',
+		// 'EE',
+		'EL', // Greece
 		'ES',
-		'FI',
+		// 'FI',
 		'FR',
 		'HR',
 		'HU',
-		'IE',
-		'IS',
+		// 'IE',
+		// 'IS',
 		'IT',
 		'LT',
 		'LU',
@@ -28,55 +30,60 @@
 		'ME',
 		'MK',
 		'NL',
-		'NO',
+		// 'NO',
 		'PL',
 		'PT',
 		'RO',
 		'RS',
-		'SE',
+		// 'SE',
 		'SI',
 		'SK',
-		'TR',
-		'UK'
+		'TR'
+		// 'UK'
 	]; // no data for LI and MT
-	//const countryName = 'BE';
 
-	// import { scaleLinear } from 'd3-scale';
-	// import { interpolateSpectral } from 'd3-scale-chromatic';
+	countryNames = ['SK'];
+	const distanceBetweenCircles = 4;
+	const radius = 5;
+	const minTemp = 20;
+	const colorGrey = '#dfdfdf';
 
-	// const tempAsNumber = data.map((d: any) => Number(d.max_daily_in_week));
+	const test = data.map((d: any) => Number(d['SK']));
+	const test2 = Math.max.apply(Math, test);
+	console.log(test2);
 
-	// const myScale = scaleLinear()
-	// 	.domain([Math.min.apply(Math, tempAsNumber), Math.max.apply(Math, tempAsNumber)])
-	// 	.range([1, 0]);
+	const color = scaleSequential(interpolateReds).domain([minTemp, 28.4]);
 
-	function getColor(temp: number) {
-		// return interpolateSpectral(myScale(temp));
+	function getFill(temp: number) {
+		if (temp < minTemp) return colorGrey;
+		return color(temp);
+	}
 
-		if (temp > 25) {
-			return 'darkred';
-		}
-		if (temp > 20) {
-			return 'indianred';
-		}
-		return '#eeeeee';
+	function getStroke(temp: number) {
+		if (temp < minTemp) return colorGrey;
+		return color(temp);
+	}
+	function getRadius(temp: number) {
+		if (temp < minTemp) return 1;
+		return radius;
 	}
 </script>
 
 {#each countryNames as countryName}
-	<svg width="1500" height="750">
+	<svg width="920" height="950" style={'background-color: #FFFCED;'}>
 		<g transform={`translate(15,15)`}>
 			<text>{countryName}</text>
 		</g>
-		<g transform={`translate(5,25)`}>
-			{#each data as entry, i}
-				{#if entry.weeknumber !== 53 && entry.year < 2023}
+		<g transform={`translate(15,25)`}>
+			{#each data as entry}
+				{#if entry.weeknumber !== 53}
 					<circle
-						cx={15 * entry.weeknumber}
-						cy={(entry.year - 1979) * 15}
-						r="5"
+						cx={(radius * 2 + distanceBetweenCircles) * entry.weeknumber}
+						cy={(entry.year - 1979) * (radius * 2 + distanceBetweenCircles * 2)}
+						r={getRadius(Number(entry[countryName]))}
 						aria-label={`${entry.year} ${entry.weeknumber} ${entry[countryName]}`}
-						fill={getColor(Number(entry[countryName]))}
+						fill={getFill(Number(entry[countryName]))}
+						stroke={getStroke(Number(entry[countryName]))}
 					/>
 				{/if}
 			{/each}
