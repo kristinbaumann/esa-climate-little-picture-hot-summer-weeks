@@ -1,5 +1,7 @@
 <script lang="ts">
-	import data from '../data/temp_country_weekly_max_daily_in_week_all_countries_new.json';
+	// import data from '../data/temp_country_weekly_max_daily_in_week_all_countries_new.json';
+	import data from '../data/temp_subcountry_ES30_weekly_max_daily_in_week.json';
+
 	import { scaleSequential } from 'd3-scale';
 	import { interpolateReds } from 'd3-scale-chromatic';
 
@@ -42,17 +44,17 @@
 		// 'UK'
 	]; // no data for LI and MT
 
-	countryNames = ['SK'];
+	countryNames = ['max_daily_in_week'];
+	const colorGrey = '#dfdfdf';
 	const distanceBetweenCircles = 4;
 	const radius = 5;
-	const minTemp = 20;
-	const colorGrey = '#dfdfdf';
+	const minTemp = 26;
 
-	const test = data.map((d: any) => Number(d['SK']));
-	const test2 = Math.max.apply(Math, test);
-	console.log(test2);
+	const test = data.map((d: any) => Number(d['max_daily_in_week']));
+	const maxTemp = Math.max.apply(Math, test);
+	console.log(maxTemp);
 
-	const color = scaleSequential(interpolateReds).domain([minTemp, 28.4]);
+	const color = scaleSequential(interpolateReds).domain([minTemp, maxTemp]);
 
 	function getFill(temp: number) {
 		if (temp < minTemp) return colorGrey;
