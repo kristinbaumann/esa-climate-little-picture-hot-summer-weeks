@@ -1,8 +1,12 @@
 # Climate Little Picture "hot summer week"
 
-This data visualization was my entry for the ["Climate Little Picture" visualization competition by ESA (European Space Agency)](https://climate.esa.int/en/littlepictures/).
+This data visualization was my entry for the ["Climate Little Picture" visualization competition by ESA (European Space Agency)](https://climate.esa.int/en/littlepictures/) in 2023.
+
+I used the following programming languages and tools: Python & Jupyter Notebooks for data wrangling, Svelte and D3 for visualization as well as Figma for final editing.
 
 You can find the project description here: https://www.kristin-baumann.com/projects/climate-little-picture-hot-summer-weeks/
+
+![Final version of data visualization with description](./climate%20little%20picture%20final%20piece.png)
 
 ## Developing
 
