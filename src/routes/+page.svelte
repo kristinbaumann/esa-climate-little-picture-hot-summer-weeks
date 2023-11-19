@@ -2,5 +2,5 @@
 	import Chart from './Chart.svelte';
 </script>
 
-<h1>Climate Little Picture</h1>
+<h1>Climate Little Picture "hot summer week"</h1>
 <Chart />

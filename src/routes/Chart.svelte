@@ -1,95 +1,58 @@
 <script lang="ts">
-	import data from '../data/temp_country_weekly_max_daily_in_week_all_countries_new.json';
-	//import data from '../data/temp_subcountry_ES30_weekly_max_daily_in_week.json';
+	import data from '../data/temp_country_weekly_max_daily_in_week_all_countries.json';
 
 	import { scaleSequential } from 'd3-scale';
 	import { interpolateReds } from 'd3-scale-chromatic';
 
-	let countryNames = [
-		'AL',
-		// 'AT',
-		'BA',
-		'BE',
-		'BG',
-		// 'CH',
-		'CY',
-		// 'CZ',
-		'DE',
-		// 'DK',
-		// 'EE',
-		'EL', // Greece
-		'ES',
-		// 'FI',
-		'FR',
-		'HR',
-		'HU',
-		// 'IE',
-		// 'IS',
-		'IT',
-		'LT',
-		'LU',
-		'LV',
-		'ME',
-		'MK',
-		'NL',
-		// 'NO',
-		'PL',
-		'PT',
-		'RO',
-		'RS',
-		// 'SE',
-		'SI',
-		'SK',
-		'TR'
-		// 'UK'
-	]; // no data for LI and MT
+	const countryName = 'SK';
 
-	countryNames = ['SK'];
-	const colorGrey = '#dfdfdf';
-	const distanceBetweenCircles = 4;
-	const radius = 5;
+	// dots
+	const distDots = 4;
+	const radiusDots = 5;
+	const mutedColorDots = '#dfdfdf';
+
+	// chart variables
+	const startYear = 1979;
+	const endYear = 2023;
+
+	const chartWidth = (radiusDots * 2 + distDots) * 53; // 742
+	const chartHeight = (endYear - 1 - startYear) * (radiusDots * 2 + distDots * 2) + distDots * 2; // 782
+
+	// vis variables
 	const minTemp = 20.5;
+	const temperatures = data.map((d: any) => Number(d[countryName]));
+	const maxTemp = Math.max.apply(Math, temperatures);
 
-	const test = data.map((d: any) => Number(d['SK']));
-	const maxTemp = Math.max.apply(Math, test);
-	console.log(maxTemp);
-
-	//const color = scaleSequential(interpolateReds).domain([minTemp, maxTemp]);
 	const color = scaleSequential(interpolateReds).domain([minTemp - 0.5, maxTemp - 0.5]);
 
 	function getFill(temp: number) {
-		if (temp < minTemp) return colorGrey;
+		if (temp < minTemp) return mutedColorDots;
 		return color(temp);
 	}
 
 	function getStroke(temp: number) {
-		if (temp < minTemp) return colorGrey;
+		if (temp < minTemp) return mutedColorDots;
 		return color(temp);
 	}
 	function getRadius(temp: number) {
 		if (temp < minTemp) return 1;
-		return radius;
+		return radiusDots;
 	}
 </script>
 
-{#each countryNames as countryName}
-	<svg width="920" height="950" style={'background-color: #FFFCED;'}>
-		<!-- <g transform={`translate(15,15)`}>
-			<text>{countryName}</text>
-		</g> -->
-		<g transform={`translate(15,25)`}>
-			{#each data as entry}
-				{#if entry.weeknumber !== 53 && entry.year > 1979 && entry.year < 2023}
-					<circle
-						cx={(radius * 2 + distanceBetweenCircles) * entry.weeknumber}
-						cy={(entry.year - 1979) * (radius * 2 + distanceBetweenCircles * 2)}
-						r={getRadius(Number(entry[countryName]))}
-						aria-label={`${entry.year} ${entry.weeknumber} ${entry[countryName]}`}
-						fill={getFill(Number(entry[countryName]))}
-						stroke={getStroke(Number(entry[countryName]))}
-					/>
-				{/if}
-			{/each}
-		</g>
-	</svg>
-{/each}
+<svg width={chartWidth} height={chartHeight} style={'background-color: #FFFCED;'}>
+	<g transform={`translate(0,-${distDots})`}>
+		{#each data as d}
+			{#if d.weeknumber !== 53 && d.year > startYear && d.year < endYear}
+				<circle
+					cx={(radiusDots * 2 + distDots) * d.weeknumber}
+					cy={(d.year - startYear) * (radiusDots * 2 + distDots * 2)}
+					r={getRadius(Number(d[countryName]))}
+					fill={getFill(Number(d[countryName]))}
+					stroke={getStroke(Number(d[countryName]))}
+					aria-label={`${d.year} ${d.weeknumber}`}
+				/>
+			{/if}
+		{/each}
+	</g>
+</svg>
